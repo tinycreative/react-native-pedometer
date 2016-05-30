@@ -7,6 +7,10 @@ var {
 var RNPedometer = React.NativeModules.RNPedometer;
 
 var Pedometer = {
+  stepCountingAvailable: RNPedometer.stepCountingAvailable,
+  floorCountingAvailable: RNPedometer.floorCountingAvailable,
+  distanceAvailable: RNPedometer.distanceAvailable,
+
   isStepCountingAvailable: function(callback) {
     RNPedometer.isStepCountingAvailable(callback);
   },

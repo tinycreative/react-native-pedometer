@@ -8,22 +8,25 @@
 
 #import "RNPedometer.h"
 
-#import <CoreMotion/CoreMotion.h>
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
-
-#define NullErr [NSNull null]
-
-@interface RNPedometer ()
-@property (nonatomic, readonly) CMPedometer *pedometer;
-@end
-
 
 @implementation RNPedometer
 
 @synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE();
+
+- (instancetype)init {
+    self = [super init];
+    if (self == nil) {
+        return nil;
+    }
+
+    _pedometer = [[CMPedometer alloc] init];
+
+    return self;
+}
 
 - (NSDictionary *)constantsToExport {
   return @{
@@ -34,22 +37,22 @@ RCT_EXPORT_MODULE();
 }
 
 RCT_EXPORT_METHOD(isStepCountingAvailable:(RCTResponseSenderBlock) callback) {
-    callback(@[NullErr, @([CMPedometer isStepCountingAvailable])]);
+    callback(@[[NSNull null], @([CMPedometer isStepCountingAvailable])]);
 }
 
 RCT_EXPORT_METHOD(isFloorCountingAvailable:(RCTResponseSenderBlock) callback) {
-    callback(@[NullErr, @([CMPedometer isFloorCountingAvailable])]);
+    callback(@[[NSNull null], @([CMPedometer isFloorCountingAvailable])]);
 }
 
 RCT_EXPORT_METHOD(isDistanceAvailable:(RCTResponseSenderBlock) callback) {
-    callback(@[NullErr, @([CMPedometer isDistanceAvailable])]);
+    callback(@[[NSNull null], @([CMPedometer isDistanceAvailable])]);
 }
 
 RCT_EXPORT_METHOD(queryPedometerDataBetweenDates:(NSDate *)startDate endDate:(NSDate *)endDate handler:(RCTResponseSenderBlock)handler) {
     [self.pedometer queryPedometerDataFromDate:startDate
                                         toDate:endDate
                                    withHandler:^(CMPedometerData *pedometerData, NSError *error) {
-                                       handler(@[error.description?:NullErr, [self dictionaryFromPedometerData:pedometerData]]);
+                                       handler(@[error.description?:[NSNull null], [self dictionaryFromPedometerData:pedometerData]]);
                                    }];
 }
 
@@ -73,31 +76,17 @@ RCT_EXPORT_METHOD(startPedometerUpdatesFromDate:(NSDate *)date) {
         formatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     });
     return @{
-             @"startDate": [formatter stringFromDate:data.startDate]?:NullErr,
-             @"endDate": [formatter stringFromDate:data.endDate]?:NullErr,
-             @"numberOfSteps": data.numberOfSteps?:NullErr,
-             @"distance": data.distance?:NullErr,
-             @"floorsAscended": data.floorsAscended?:NullErr,
-             @"floorsDescended": data.floorsDescended?:NullErr,
+             @"startDate": [formatter stringFromDate:data.startDate]?:[NSNull null],
+             @"endDate": [formatter stringFromDate:data.endDate]?:[NSNull null],
+             @"numberOfSteps": data.numberOfSteps?:[NSNull null],
+             @"distance": data.distance?:[NSNull null],
+             @"floorsAscended": data.floorsAscended?:[NSNull null],
+             @"floorsDescended": data.floorsDescended?:[NSNull null],
            };
 }
 
 RCT_EXPORT_METHOD(stopPedometerUpdates) {
     [self.pedometer stopPedometerUpdates];
-}
-
-#pragma mark - Private
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self == nil) {
-        return nil;
-    }
-
-    _pedometer = [[CMPedometer alloc]init];
-
-    return self;
 }
 
 
