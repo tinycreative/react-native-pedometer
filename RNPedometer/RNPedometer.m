@@ -23,7 +23,15 @@
 
 @synthesize bridge = _bridge;
 
-RCT_EXPORT_MODULE()
+RCT_EXPORT_MODULE();
+
+- (NSDictionary *)constantsToExport {
+  return @{
+    @"isStepCountingAvailable" : @([CMPedometer isStepCountingAvailable]),
+    @"isFloorCountingAvailable" : @([CMPedometer isFloorCountingAvailable]),
+    @"isDistanceAvailable" : @([CMPedometer isDistanceAvailable])
+  };
+}
 
 RCT_EXPORT_METHOD(isStepCountingAvailable:(RCTResponseSenderBlock) callback) {
     callback(@[NullErr, @([CMPedometer isStepCountingAvailable])]);
@@ -55,7 +63,7 @@ RCT_EXPORT_METHOD(startPedometerUpdatesFromDate:(NSDate *)date) {
 }
 
 - (NSDictionary *)dictionaryFromPedometerData:(CMPedometerData *)data {
-    
+
     static NSDateFormatter *formatter;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -65,14 +73,13 @@ RCT_EXPORT_METHOD(startPedometerUpdatesFromDate:(NSDate *)date) {
         formatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     });
     return @{
-             
              @"startDate": [formatter stringFromDate:data.startDate]?:NullErr,
              @"endDate": [formatter stringFromDate:data.endDate]?:NullErr,
              @"numberOfSteps": data.numberOfSteps?:NullErr,
              @"distance": data.distance?:NullErr,
              @"floorsAscended": data.floorsAscended?:NullErr,
              @"floorsDescended": data.floorsDescended?:NullErr,
-             };
+           };
 }
 
 RCT_EXPORT_METHOD(stopPedometerUpdates) {
@@ -89,7 +96,7 @@ RCT_EXPORT_METHOD(stopPedometerUpdates) {
     }
 
     _pedometer = [[CMPedometer alloc]init];
-    
+
     return self;
 }
 
