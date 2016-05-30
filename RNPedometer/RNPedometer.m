@@ -27,9 +27,9 @@ RCT_EXPORT_MODULE();
 
 - (NSDictionary *)constantsToExport {
   return @{
-    @"isStepCountingAvailable" : @([CMPedometer isStepCountingAvailable]),
-    @"isFloorCountingAvailable" : @([CMPedometer isFloorCountingAvailable]),
-    @"isDistanceAvailable" : @([CMPedometer isDistanceAvailable])
+    @"stepCountingAvailable" : @([CMPedometer isStepCountingAvailable]),
+    @"floorCountingAvailable" : @([CMPedometer isFloorCountingAvailable]),
+    @"distanceAvailable" : @([CMPedometer isDistanceAvailable])
   };
 }
 
